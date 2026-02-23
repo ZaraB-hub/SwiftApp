@@ -2,7 +2,7 @@
 //  InsightService.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 
@@ -32,12 +32,11 @@ public final class InsightService {
             .count
     }
     
-    // total tasks completed
     public func totalTasksCompleted() -> Int {
         repository.fetchCompleted().count
     }
     
-    // hardest task ever attempted (highest anxietyBefore)
+    // hardest task ever attempted 
     public func hardestTaskCompleted() -> Task? {
         repository.fetchCompleted()
             .max(by: { $0.anxietyBefore < $1.anxietyBefore })
@@ -50,25 +49,7 @@ public final class InsightService {
                 guard let reduction = task.anxietyReduction else { return nil }
                 return (task, reduction)
             }
-            .max(by: { $0.1 < $1.1 })?
-            .0
+            .max(by: { $0.1 < $1.1 })?.0
     }
     
-    // most productive day of the week
-    public func mostProductiveDay() -> String? {
-        let completed = repository.fetchCompleted()
-        guard !completed.isEmpty else { return nil }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        
-        var dayCounts: [String: Int] = [:]
-        for task in completed {
-            guard let date = task.dateCompleted else { continue }
-            let day = formatter.string(from: date)
-            dayCounts[day, default: 0] += 1
-        }
-        
-        return dayCounts.max(by: { $0.value < $1.value })?.key
-    }
 }

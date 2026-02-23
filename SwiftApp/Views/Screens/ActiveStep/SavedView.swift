@@ -6,11 +6,14 @@ struct SavedView: View {
 	let dismiss: DismissAction
 
 	var body: some View {
-		VStack(spacing: 24) {
-			Spacer()
+		ZStack {
+			ConfettiView(isActive: true)
+			
+			VStack(spacing: 24) {
+				Spacer()
 
-			Text("✨")
-				.font(.system(size: 80))
+				Text("✨")
+					.font(.system(size: 80))
 
 			Text("Saved to your Courage Log.")
 				.font(.title2)
@@ -39,6 +42,7 @@ struct SavedView: View {
 			}
 			.padding(.horizontal)
 			.padding(.bottom, 32)
+		}
 		}
 	}
 }

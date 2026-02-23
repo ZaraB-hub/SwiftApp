@@ -16,12 +16,12 @@ struct CourageLogView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            .onDelete { indexSet in
-                for index in indexSet {
-                    let task = viewModel.tasks[index]
-                    viewModel.delete(id: task.id)
-                }
-            }
+            // .onDelete { indexSet in
+            //     for index in indexSet {
+            //         let task = viewModel.tasks[index]
+            //         viewModel.delete(id: task.id)
+            //     }
+            // }
         }
         .navigationTitle("Courage Log")
         .onAppear {

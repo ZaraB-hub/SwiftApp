@@ -18,15 +18,19 @@ struct SwiftAppApp: App {
     private let stepService:StepService
     
     init(){
-        let container = try! ModelContainer(for: Task.self)
-        let repo = SwiftDataTaskRepository(modelContext: container.mainContext)
-        let stepGen=StepGeneratorService()
+        do {
+            let container = try ModelContainer(for: Task.self)
+            let repo = SwiftDataTaskRepository(modelContext: container.mainContext)
+            let stepGen = StepGeneratorService()
 
-        self.sharedModelContainer = container
-        self.repository=repo
-        self.stepGenerator=stepGen
-        self.taskService = TaskServices(repository: repo, stepGenerator: stepGen)
-        self.stepService = StepService(repository: repo)
+            self.sharedModelContainer = container
+            self.repository = repo
+            self.stepGenerator = stepGen
+            self.taskService = TaskServices(repository: repo, stepGenerator: stepGen)
+            self.stepService = StepService(repository: repo)
+        } catch {
+            fatalError("Could not initialize SwiftData container: \(error)")
+        }
     }
     
     var body: some Scene {
