@@ -6,21 +6,25 @@
 //
 
 import Foundation
+import SwiftData
 
-public struct Task: Identifiable {
-    public var id = UUID()
+@Model
+public final class Task: Identifiable {
+    public var id: UUID
     public var title: String
     public var steps: [Step]
     public var anxietyBefore: Int
     public var anxietyAfter: Int?
     public var reflection: String?
-    public let dateCreated = Date()
+    public let dateCreated: Date
     public var dateCompleted: Date?
 
-    public init(title: String, steps: [Step], anxietyBefore: Int) {
+    public init(title: String, steps: [Step], date: Date = .now, anxietyBefore: Int) {
+        self.id = UUID()
         self.title = title
         self.steps = steps
         self.anxietyBefore = anxietyBefore
+        self.dateCreated = date
     }
 
     public var isCompleted: Bool {
@@ -33,8 +37,7 @@ public struct Task: Identifiable {
     }
 
     public var status: TaskStatus {
-        if isCompleted { return .completed }
-        return .inProgress
+        isCompleted ? .completed : .inProgress
     }
 }
 

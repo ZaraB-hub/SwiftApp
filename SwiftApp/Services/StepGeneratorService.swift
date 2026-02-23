@@ -2,7 +2,7 @@
 //  StepGeneratorService.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 
@@ -14,20 +14,21 @@ public final class StepGeneratorService {
     public init() {}
     
     public func generateSteps(for taskTitle: String) async -> [Step] {
-            // try AI first
             if let aiSteps = await generateWithAI(for: taskTitle) {
                 return aiSteps
             }
-            // fall back to rules if AI fails
             return fallbackSteps(for: taskTitle)
         }
         
         private func generateWithAI(for taskTitle: String) async -> [Step]? {
             do {
-                let session = LanguageModelSession()
+                let instructions = """
+                You are a psychologist that is helping her client accomplish a task
+                """
+                let session = LanguageModelSession(instructions)
                 let prompt = """
                 Break this task into 5-7 very small, concrete steps for someone with anxiety or ADHD.
-                Each step should take less than 2 minutes and be extremely specific.
+                Each step should and be extremely specific and broken down in a way that help someone wiith anxiety face the thing they are afraid to do.
                 Task: \(taskTitle)
                 
                 Return ONLY a numbered list like this:
@@ -61,10 +62,7 @@ public final class StepGeneratorService {
                     return Step(title: withoutNumber)
                 }
         }
-    public func generateSteps(for taskTitle: String) -> [Step] {
-        return fallbackSteps(for: taskTitle)
-    }
-    
+
     private func fallbackSteps(for title: String) -> [Step] {
         let lower = title.lowercased()
         

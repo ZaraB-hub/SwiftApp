@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Step: Identifiable {
+public struct Step: Identifiable, Codable {
     public var id = UUID()
     public var title: String
     public var isCompleted: Bool

@@ -2,7 +2,7 @@
 //  ActiveStepViewModel.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 
@@ -22,6 +22,7 @@ public final class ActiveStepViewModel {
     var anxietyAfter: Double = 5
     var reflection: String = ""
     var taskSaved: Bool = false
+    let totalBreathingCycles: Int = 3
     
     init(task: Task, stepService: StepService, taskService: TaskServices) {
         self.task = task
@@ -33,7 +34,7 @@ public final class ActiveStepViewModel {
     func completeCurrentStep() {
         guard let step = currentStep else { return }
         
-        stepService.completeStep(id: step.id, in: task)
+        stepService.completeStep(stepID: step.id, taskID: task.id)
         
         task.steps = task.steps.map { s in
             var updated = s
@@ -63,29 +64,37 @@ public final class ActiveStepViewModel {
     }
     
     private func runBreathing() {
-        let phases: [(String, Double, TimeInterval)] = [
-            ("Inhale", 0.33, 4),
-            ("Hold", 0.66, 4),
-            ("Exhale", 1.0, 6)
+        let singleCycle: [(String, Double, TimeInterval)] = [
+            ("Inhale", 1.0, 4),
+            ("Hold", 1.0, 7),
+            ("Exhale", 0.0, 8)
         ]
-        
+
         var delay: TimeInterval = 0
-        
-        for (phase, progress, duration) in phases {
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                self.breathingPhase = phase
-                self.breathingProgress = progress
+
+        for cycle in 1...totalBreathingCycles {
+            for (phase, progress, duration) in singleCycle {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    self.breathingCycle = cycle
+                    self.breathingPhase = phase
+                    self.breathingAnimationDuration = duration
+                    self.breathingProgress = progress
+                }
+                delay += duration
             }
-            delay += duration
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.isBreathing = false
             self.breathingPhase = "Inhale"
             self.breathingProgress = 0.0
+            self.breathingAnimationDuration = 4
+            self.breathingCycle = 1
         }
     }
     
     var breathingPhase: String = "Inhale"
     var breathingProgress: Double = 0.0
+    var breathingAnimationDuration: TimeInterval = 4
+    var breathingCycle: Int = 1
 }

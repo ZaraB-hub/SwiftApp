@@ -2,22 +2,27 @@
 //  SwiftAppApp.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 import SwiftUI
+import SwiftData
+
 
 @main	
 struct SwiftAppApp: App {
-    private let repository:InMemoryTaskRepository
+    private let sharedModelContainer: ModelContainer
+    private let repository: SwiftDataTaskRepository
     private let stepGenerator:StepGeneratorService
     private let taskService:TaskServices
     private let stepService:StepService
     
     init(){
-        let repo=InMemoryTaskRepository()
+        let container = try! ModelContainer(for: Task.self)
+        let repo = SwiftDataTaskRepository(modelContext: container.mainContext)
         let stepGen=StepGeneratorService()
-        
+
+        self.sharedModelContainer = container
         self.repository=repo
         self.stepGenerator=stepGen
         self.taskService = TaskServices(repository: repo, stepGenerator: stepGen)
@@ -30,4 +35,5 @@ struct SwiftAppApp: App {
                 HomeView(viewModel: HomeViewModel( taskService: taskService, stepService: stepService))
             }
         }
+        .modelContainer(sharedModelContainer)
     }}

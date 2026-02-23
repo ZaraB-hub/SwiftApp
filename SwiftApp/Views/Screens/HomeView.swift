@@ -2,7 +2,7 @@
 //  HomeView.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 import SwiftUI
@@ -10,21 +10,21 @@ import SwiftUI
 struct HomeView: View {
     
     @State var viewModel: HomeViewModel
-    //let taskService: TaskServices
-    //let stepService:StepService
     
     var body: some View {
         ZStack {
 
-            LinearGradient(
-                colors: [
-                    Color(.systemPurple).opacity(0.15),
-                    Color(.systemMint).opacity(0.25)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // LinearGradient(
+            //     colors: [
+            //         Color(.systemPurple).opacity(0.15),
+            //         Color(.systemMint).opacity(0.25)
+            //     ],
+            //     startPoint: .topLeading,
+            //     endPoint: .bottomTrailing
+            // )
+            // .ignoresSafeArea()
+
+            AppBackground()
 
             VStack(spacing: 32) {
 
@@ -62,7 +62,8 @@ struct HomeView: View {
                 }
 
                 NavigationLink {
-                    // EvidenceLogView goes here
+                    CourageLogView(viewModel: CourageLogViewModel(taskService: viewModel.taskService)
+    )
                 } label: {
                     HStack {
                         Image(systemName: "book")

@@ -2,7 +2,7 @@
 //  AnxietyView.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 
@@ -16,15 +16,7 @@ struct AnxietyView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [
-                    Color(.systemPurple).opacity(0.15),
-                    Color(.systemMint).opacity(0.25)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppBackground()
 
             VStack(spacing: 32) {
                 Spacer()
@@ -56,7 +48,6 @@ struct AnxietyView: View {
 
                 Spacer()
 
-                // hidden navigation link triggered programmatically
                 NavigationLink(isActive: $navigate) {
                     if let task = viewModel.createdTask {
                         ActiveStepView(viewModel: ActiveStepViewModel(
@@ -117,7 +108,9 @@ struct AnxietyView: View {
 
 #Preview {
     NavigationStack {
-        let repo = InMemoryTaskRepository()
+
+        let repo = SwiftDataTaskRepository(inMemoryOnly: true)
+
         let stepService = StepService(repository: repo)
         let taskService = TaskServices(
             repository: repo,

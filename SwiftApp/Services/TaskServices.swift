@@ -2,7 +2,7 @@
 //  TaskServices.swift
 //  SwiftApp
 //
-//  Created by Zlatan Bahtanović on 22. 2. 26.
+//  Created by Zara Bahtanović on 22. 2. 26.
 //
 
 
@@ -24,7 +24,7 @@ public final class TaskServices {
         let steps = await stepGenerator.generateSteps(for: title)
         let task = Task(title: title, steps: steps, anxietyBefore: anxietyBefore)
         repository.save(task)
-        print("task created with \(steps.count) steps")
+        print("task created")
     }
     
     public func completeTask(id: UUID, anxietyAfter: Int, reflection: String?) throws {
@@ -36,7 +36,7 @@ public final class TaskServices {
         
         task.anxietyAfter = anxietyAfter
         task.reflection = reflection
-        task.dateCompleted = Date()
+        task.dateCompleted = .now
         
         repository.update(task)
     }
@@ -50,7 +50,7 @@ public final class TaskServices {
     }
     
     public func getTask(id: UUID) throws -> Task {
-        guard let task = repository.fetch(id: id) else {
+        guard var task = repository.fetch(id: id) else {
             throw TaskError.notFound
         }
         return task
