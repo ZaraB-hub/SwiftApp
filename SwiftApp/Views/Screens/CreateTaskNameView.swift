@@ -15,15 +15,8 @@ struct CreateTaskNameView: View {
 
                 // Back button
                 HStack {
-                    Button {
+                    BackCircleButton {
                         dismiss()
-                    } label: {
-                        Image(systemName: "arrow.left")
-                            .font(.system(size: 18, weight: .medium))
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.9))
-                            .clipShape(Circle())
-                            .shadow(radius: 6)
                     }
 
                     Spacer()
@@ -66,13 +59,12 @@ struct CreateTaskNameView: View {
                 NavigationLink {
                     AnxietyView(viewModel: viewModel)
                 } label: {
-
-                    Text("Continue")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(viewModel.title.isEmpty ? .gray : .white)
-                        .cornerRadius(22)
+                    if viewModel.title.isEmpty {
+                        SecondaryActionButtonLabel(title: "Continue")
+                            .foregroundColor(.gray)
+                    } else {
+                        PrimaryActionButtonLabel(title: "Continue")
+                    }
                 }
                 .disabled(viewModel.title.isEmpty)
 

@@ -95,23 +95,8 @@ struct ReflectionView: View {
                 Button {
                     viewModel.saveAndFinish()
                 } label: {
-                    Text("Save & Finish")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
+                    PrimaryActionButtonLabel(title: "Save & Finish")
                 }
-                .background(
-                    LinearGradient(
-                        colors: [
-                            Color.purple.opacity(0.9),
-                            Color.purple.opacity(0.7)
-                        ],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .foregroundColor(.white)
-                .cornerRadius(22)
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }

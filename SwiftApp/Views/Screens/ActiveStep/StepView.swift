@@ -53,33 +53,14 @@ struct StepView: View {
                     Button {
                         viewModel.completeCurrentStep()
                     } label: {
-                        Text("Done ✓")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
+                        PrimaryActionButtonLabel(title: "Done ✓")
                     }
-                    .background(
-                        LinearGradient(
-                            colors: [
-                                Color.purple.opacity(0.9),
-                                Color.purple.opacity(0.7)
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .foregroundColor(.white)
-                    .cornerRadius(22)
 
                     // Too hard
                     Button {
                         viewModel.tooHard()
                     } label: {
-                        Text("Too hard right now")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.white.opacity(0.9))
-                            .cornerRadius(22)
+                        SecondaryActionButtonLabel(title: "Too hard right now")
                     }
                 }
                 .padding(.horizontal)

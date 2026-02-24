@@ -1,0 +1,65 @@
+import SwiftUI
+
+struct BackCircleButton: View {
+
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "arrow.left")
+                .font(.system(size: 18, weight: .medium))
+                .frame(width: 44, height: 44)
+                .background(Color.white.opacity(0.9))
+                .clipShape(Circle())
+                .shadow(radius: 6)
+        }
+    }
+}
+
+struct PrimaryActionButtonLabel: View {
+
+    let title: String
+    var isLoading: Bool = false
+
+    var body: some View {
+        Group {
+            if isLoading {
+                ProgressView()
+                    .tint(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            } else {
+                Text(title)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
+        }
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.purple.opacity(0.9),
+                    Color.purple.opacity(0.7)
+                ],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+        )
+        .foregroundColor(.white)
+        .cornerRadius(22)
+    }
+}
+
+struct SecondaryActionButtonLabel: View {
+
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .fontWeight(.medium)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.white.opacity(0.9))
+            .cornerRadius(22)
+    }
+}

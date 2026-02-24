@@ -24,15 +24,8 @@ struct AnxietyView: View {
 
                 // Back button
                 HStack {
-                    Button {
+                    BackCircleButton {
                         dismiss()
-                    } label: {
-                        Image(systemName: "arrow.left")
-                            .font(.system(size: 18, weight: .medium))
-                            .frame(width: 44, height: 44)
-                            .background(Color.white.opacity(0.9))
-                            .clipShape(Circle())
-                            .shadow(radius: 6)
                     }
 
                     Spacer()
@@ -107,31 +100,8 @@ struct AnxietyView: View {
                         navigate = true
                     }
                 } label: {
-
-                    if isLoading {
-                        ProgressView()
-                            .tint(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                    } else {
-                        Text("Continue")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                    }
+                    PrimaryActionButtonLabel(title: "Continue", isLoading: isLoading)
                 }
-                .background(
-                    LinearGradient(
-                        colors: [
-                            Color.purple.opacity(0.9),
-                            Color.purple.opacity(0.7)
-                        ],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .foregroundColor(.white)
-                .cornerRadius(22)
                 .padding(.horizontal)
                 .padding(.bottom, 32)
                 .disabled(isLoading)

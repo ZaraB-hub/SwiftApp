@@ -43,22 +43,7 @@ struct HomeView: View {
                         )
                     )
                 } label: {
-                    Text("Start something hard")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(
-                            LinearGradient(
-                                colors: [
-                                    Color.purple.opacity(0.9),
-                                    Color.purple.opacity(0.7)
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(22)
+                    PrimaryActionButtonLabel(title: "Start something hard")
                 }
 
                 // Secondary button
@@ -69,12 +54,7 @@ struct HomeView: View {
                         )
                     )
                 } label: {
-                    Text("Courage Log")
-                        .fontWeight(.medium)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.white.opacity(0.9))
-                        .cornerRadius(22)
+                    SecondaryActionButtonLabel(title: "Courage Log")
                 }
 
                 Spacer()
