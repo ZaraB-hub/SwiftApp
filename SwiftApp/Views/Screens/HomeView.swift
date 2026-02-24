@@ -1,85 +1,85 @@
-//
-//  HomeView.swift
-//  SwiftApp
-//
-//  Created by Zara Bahtanović on 22. 2. 26.
-//
-
 import SwiftUI
 
 struct HomeView: View {
-    
+
     @State var viewModel: HomeViewModel
-    
+
     var body: some View {
         ZStack {
-
-            // LinearGradient(
-            //     colors: [
-            //         Color(.systemPurple).opacity(0.15),
-            //         Color(.systemMint).opacity(0.25)
-            //     ],
-            //     startPoint: .topLeading,
-            //     endPoint: .bottomTrailing
-            // )
-            // .ignoresSafeArea()
-
             AppBackground()
 
-            VStack(spacing: 32) {
+            VStack(spacing: 28) {
 
                 Spacer()
 
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
 
-                    Image(systemName: "exclamationmark.circle")
-                        .font(.system(size: 40))
-                        .foregroundColor(.blue)
+                    // Icon container
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.9))
+                            .frame(width: 72, height: 72)
+                            .shadow(radius: 8)
 
-                    Text("Breathe.\nLet's begin.")
-                        .font(.system(size: 34, weight: .bold))
-                        .multilineTextAlignment(.center)
+                        Image(systemName: "leaf")
+                            .font(.system(size: 30))
+                            .foregroundColor(.purple)
+                    }
 
-                    Text("Small steps turn mountains into gentle paths.")
+                    Text("Courage")
+                        .font(.system(size: 36, weight: .bold))
+
+                    Text("Breathe. Let's begin.")
                         .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
                 }
 
+                // Primary button
                 NavigationLink {
-                    CreateTaskNameView(viewModel: AddTaskViewModel(taskService: viewModel.taskService, stepService: viewModel.stepService))
+                    CreateTaskNameView(
+                        viewModel: AddTaskViewModel(
+                            taskService: viewModel.taskService,
+                            stepService: viewModel.stepService
+                        )
+                    )
                 } label: {
-                    HStack {
-                        Text("Start something hard")
-                            .fontWeight(.semibold)
-                        Image(systemName: "arrow.right")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(16)
+                    Text("Start something hard")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            LinearGradient(
+                                colors: [
+                                    Color.purple.opacity(0.9),
+                                    Color.purple.opacity(0.7)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .foregroundColor(.white)
+                        .cornerRadius(22)
                 }
 
+                // Secondary button
                 NavigationLink {
-                    CourageLogView(viewModel: CourageLogViewModel(taskService: viewModel.taskService)
-    )
+                    CourageLogView(
+                        viewModel: CourageLogViewModel(
+                            taskService: viewModel.taskService
+                        )
+                    )
                 } label: {
-                    HStack {
-                        Image(systemName: "book")
-                        Text("Courage Log")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(16)
+                    Text("Courage Log")
+                        .fontWeight(.medium)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.white.opacity(0.9))
+                        .cornerRadius(22)
                 }
 
                 Spacer()
             }
-            .padding()
+            .padding(.horizontal, 24)
         }
         .onAppear { viewModel.loadTasks() }
     }
 }
-
