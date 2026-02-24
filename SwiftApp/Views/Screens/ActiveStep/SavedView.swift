@@ -7,7 +7,7 @@ struct SavedView: View {
 
 	var body: some View {
 		ZStack {
-			ConfettiView(isActive: true)
+			//ConfettiView(isActive: true)
 			
 			VStack(spacing: 24) {
 				Spacer()

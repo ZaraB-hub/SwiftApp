@@ -1,45 +1,85 @@
 
-
 import SwiftUI
 
 struct CreateTaskNameView: View {
-    
+
     @State var viewModel: AddTaskViewModel
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        ZStack {
 
-            Text("What are you avoiding right now?")
-                .font(.title2)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.center)
+            AppBackground()
 
-            Text("Just name it. It loses power when you write it down.")
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            VStack(spacing: 28) {
 
-            TextField("I'm avoiding...", text: $viewModel.title)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal)
-
-            NavigationLink {
-                AnxietyView(viewModel: viewModel)
-            } label: {
+                // Back button
                 HStack {
-                    Text("Continue")
-                    Image(systemName: "arrow.right")
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(viewModel.title.isEmpty ? Color.gray : Color.black)
-                .foregroundColor(.white)
-                .cornerRadius(16)
-            }
-            .disabled(viewModel.title.isEmpty)
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 18, weight: .medium))
+                            .frame(width: 44, height: 44)
+                            .background(Color.white.opacity(0.9))
+                            .clipShape(Circle())
+                            .shadow(radius: 6)
+                    }
 
-            Spacer()
+                    Spacer()
+                }
+
+                Spacer()
+
+                VStack(spacing: 12) {
+
+                    Text("What are you avoiding right now?")
+                        .font(.system(size: 32, weight: .bold))
+                        .multilineTextAlignment(.center)
+
+                    Text("It's okay. There's no judgment here.")
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                // Text card
+                ZStack(alignment: .topLeading) {
+
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .shadow(radius: 10)
+
+                    TextEditor(text: $viewModel.title)
+                        .padding(12)
+                        .frame(height: 120)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+
+                    if viewModel.title.isEmpty {
+                        Text("e.g. Sending that difficult email...")
+                            .foregroundColor(.gray)
+                            .padding(18)
+                    }
+                }
+
+                // Continue button
+                NavigationLink {
+                    AnxietyView(viewModel: viewModel)
+                } label: {
+
+                    Text("Continue")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(viewModel.title.isEmpty ? .gray : .white)
+                        .cornerRadius(22)
+                }
+                .disabled(viewModel.title.isEmpty)
+
+                Spacer()
+            }
+            .padding(.horizontal, 24)
+            .padding(.top)
         }
-        .padding()
     }
 }

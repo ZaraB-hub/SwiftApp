@@ -3,8 +3,8 @@
 //  SwiftApp
 //
 //  Created by Zara Bahtanović on 22. 2. 26.
-//
 
+//
 
 import SwiftUI
 
@@ -13,48 +13,90 @@ struct AnxietyView: View {
     @State var viewModel: AddTaskViewModel
     @State private var navigate = false
     @State private var isLoading = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack {
+
             AppBackground()
 
-            VStack(spacing: 32) {
-                Spacer()
+            VStack(spacing: 28) {
 
-                VStack(spacing: 8) {
-                    Text("How anxious does this make you?")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
+                // Back button
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 18, weight: .medium))
+                            .frame(width: 44, height: 44)
+                            .background(Color.white.opacity(0.9))
+                            .clipShape(Circle())
+                            .shadow(radius: 6)
+                    }
 
-                    Text(viewModel.title)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
+                    Spacer()
                 }
 
-                // big anxiety number
-                Text("\(Int(viewModel.anxiety))")
-                    .font(.system(size: 72, weight: .bold))
-                    .foregroundColor(.purple.opacity(0.8))
+                Spacer()
 
-                // label under number
+                VStack(spacing: 12) {
+
+                    Text("How anxious do you feel?")
+                        .font(.system(size: 32, weight: .bold))
+                        .multilineTextAlignment(.center)
+
+                    Text("Right now, about this task")
+                        .foregroundColor(.secondary)
+                }
+
+                // Anxiety bubble
+                ZStack {
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 120, height: 120)
+                        .shadow(radius: 12)
+
+                    Text("\(Int(viewModel.anxiety))")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.purple)
+                }
+
                 Text(anxietyLabel(for: Int(viewModel.anxiety)))
-                    .font(.subheadline)
                     .foregroundColor(.secondary)
 
-                Slider(value: $viewModel.anxiety, in: 1...10, step: 1)
-                    .tint(.purple)
-                    .padding(.horizontal)
+                // Slider card
+                VStack(spacing: 12) {
+
+                    Slider(value: $viewModel.anxiety, in: 1...10, step: 1)
+                        .tint(.purple)
+
+                    HStack {
+                        Text("1")
+                        Spacer()
+                        Text("10")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                }
+                .padding()
+                .background(Color.white.opacity(0.9))
+                .cornerRadius(20)
+                .shadow(radius: 10)
 
                 Spacer()
 
                 NavigationLink(isActive: $navigate) {
                     if let task = viewModel.createdTask {
-                        ActiveStepView(viewModel: ActiveStepViewModel(
-                            task: task,
-                            stepService: viewModel.stepService,
-                            taskService: viewModel.taskService
-                        ))                    }
+                        ActiveStepView(
+                            viewModel: ActiveStepViewModel(
+                                task: task,
+                                stepService: viewModel.stepService,
+                                taskService: viewModel.taskService
+                            )
+                        )
+                    }
                 } label: { EmptyView() }
 
                 Button {
@@ -65,58 +107,40 @@ struct AnxietyView: View {
                         navigate = true
                     }
                 } label: {
-                    HStack {
-                        if isLoading {
-                            ProgressView()
-                                .tint(.white)
-                        } else {
-                            Text("Let's break it down")
-                                .fontWeight(.semibold)
-                            Image(systemName: "arrow.right")
-                        }
+
+                    if isLoading {
+                        ProgressView()
+                            .tint(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    } else {
+                        Text("Continue")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color.black.opacity(0.7), Color.black.opacity(0.5)]),
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .blur(radius: 8)
-                    )
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(16)
                 }
-                .disabled(isLoading)
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.purple.opacity(0.9),
+                            Color.purple.opacity(0.7)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+                .cornerRadius(22)
                 .padding(.horizontal)
                 .padding(.bottom, 32)
+                .disabled(isLoading)
             }
-            .padding()
+            .padding(.horizontal, 24)
+            .padding(.top)
         }
     }
-
-    // func anxietyLabel(for value: Int) -> String {
-    //     switch value {
-    //     case 1: return "Barely bothered"
-    //     case 2: return "A little uneasy"
-    //     case 3: return "Somewhat nervous"
-    //     case 4: return "Noticeably anxious"
-    //     case 5: return "Moderately stressed"
-    //     case 6: return "Quite anxious"
-    //     case 7: return "Very anxious"
-    //     case 8: return "Really struggling"
-    //     case 9: return "Extremely overwhelmed"
-    //     case 10: return "Cannot function right now"
-    //     default: return ""
-    //     }
-    // }
 }
-
 #Preview {
     NavigationStack {
 
@@ -127,9 +151,12 @@ struct AnxietyView: View {
             repository: repo,
             stepGenerator: StepGeneratorService()
         )
-        AnxietyView(viewModel: AddTaskViewModel(
-            taskService: taskService,
-            stepService: stepService
-        ))
+
+        AnxietyView(
+            viewModel: AddTaskViewModel(
+                taskService: taskService,
+                stepService: stepService
+            )
+        )
     }
 }

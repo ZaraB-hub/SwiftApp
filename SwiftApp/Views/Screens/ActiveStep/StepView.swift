@@ -1,65 +1,95 @@
+
 import SwiftUI
 
 struct StepView: View {
 
-	var viewModel: ActiveStepViewModel
+    var viewModel: ActiveStepViewModel
 
-	var body: some View {
-		VStack(spacing: 40) {
-			Spacer()
+    var body: some View {
+        ZStack {
 
-			VStack(spacing: 8) {
-				Text("One small step")
-					.font(.subheadline)
-					.foregroundColor(.secondary)
+            AppBackground()
 
-				let completed = viewModel.task.steps.filter { $0.isCompleted }.count
-				let total = viewModel.task.steps.count
+            VStack(spacing: 28) {
 
-				Text("\(completed) of \(total)")
-					.font(.caption)
-					.foregroundColor(.secondary)
+                // Progress header
+                VStack(spacing: 8) {
 
-				ProgressView(value: Double(completed), total: Double(total))
-					.tint(.purple)
-					.padding(.horizontal, 40)
-			}
+                    let completed = viewModel.task.steps.filter { $0.isCompleted }.count
+                    let total = viewModel.task.steps.count
 
-			if let step = viewModel.currentStep {
-				Text(step.title)
-					.font(.system(size: 26, weight: .semibold))
-					.multilineTextAlignment(.center)
-					.padding(.horizontal, 32)
-			}
+                    Text("Step \(completed + 1) of \(total)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
 
-			Spacer()
+                    ProgressView(value: Double(completed), total: Double(total))
+                        .tint(.purple)
+                        .padding(.horizontal)
+                }
 
-			VStack(spacing: 12) {
-				Button {
-					viewModel.completeCurrentStep()
-				} label: {
-					Text("Done ✓")
-						.fontWeight(.semibold)
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(Color.black)
-						.foregroundColor(.white)
-						.cornerRadius(16)
-				}
+                Spacer()
 
-				Button {
-					viewModel.tooHard()
-				} label: {
-					Text("Too hard right now")
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(Color.white.opacity(0.8))
-						.foregroundColor(.black)
-						.cornerRadius(16)
-				}
-			}
-			.padding(.horizontal)
-			.padding(.bottom, 32)
-		}
-	}
+                Text("One small step")
+                    .font(.system(size: 30, weight: .bold))
+
+                // Step card
+                if let step = viewModel.currentStep {
+                    Text(step.title)
+                        .font(.system(size: 20))
+                        .multilineTextAlignment(.center)
+                        .padding(24)
+                        .frame(maxWidth: .infinity)
+                        .background(Color.white.opacity(0.95))
+                        .cornerRadius(24)
+                        .shadow(radius: 10)
+                        .padding(.horizontal)
+                }
+
+                Spacer()
+
+                VStack(spacing: 16) {
+
+                    // Done button
+                    Button {
+                        viewModel.completeCurrentStep()
+                    } label: {
+                        Text("Done ✓")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    }
+                    .background(
+                        LinearGradient(
+                            colors: [
+                                Color.purple.opacity(0.9),
+                                Color.purple.opacity(0.7)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .foregroundColor(.white)
+                    .cornerRadius(22)
+
+                    // Too hard
+                    Button {
+                        viewModel.tooHard()
+                    } label: {
+                        Text("Too hard right now")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.white.opacity(0.9))
+                            .cornerRadius(22)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 32)
+
+                Text("×  Can't do this now")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.bottom)
+            }
+        }
+    }
 }

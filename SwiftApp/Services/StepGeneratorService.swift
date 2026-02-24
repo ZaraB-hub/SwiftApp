@@ -25,7 +25,7 @@ public final class StepGeneratorService {
                 let instructions = """
                 You are a psychologist that is helping her client accomplish a task
                 """
-                let session = LanguageModelSession(instructions)
+                let session = LanguageModelSession()
                 let prompt = """
                 Break this task into 5-7 very small, concrete steps for someone with anxiety or ADHD.
                 Each step should and be extremely specific and broken down in a way that help someone wiith anxiety face the thing they are afraid to do.
