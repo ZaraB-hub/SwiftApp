@@ -4,6 +4,7 @@ import SwiftUI
 struct StepView: View {
 
     var viewModel: ActiveStepViewModel
+    var onCancelToHome: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
@@ -65,10 +66,15 @@ struct StepView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 32)
 
-                Text("×  Can't do this now")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom)
+                Button {
+                    onCancelToHome?()
+                } label: {
+                    Text("×  Can't do this now")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+                .padding(.bottom)
             }
         }
     }

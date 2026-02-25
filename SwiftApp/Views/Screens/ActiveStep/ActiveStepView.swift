@@ -5,6 +5,7 @@ struct ActiveStepView: View {
 
     @State var viewModel: ActiveStepViewModel
     var onFlowFinished: (() -> Void)? = nil
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack {
@@ -12,7 +13,11 @@ struct ActiveStepView: View {
 
             if viewModel.taskSaved {
                 SavedView(viewModel: viewModel) {
-                    onFlowFinished?()
+                    if let onFlowFinished {
+                        onFlowFinished()
+                    } else {
+                        dismiss()
+                    }
                 }
             } else if viewModel.showReflection {
                 ReflectionView(viewModel: viewModel)
@@ -21,7 +26,13 @@ struct ActiveStepView: View {
             } else if viewModel.isBreathing {
                 BreathingView(viewModel: viewModel)
             } else {
-                StepView(viewModel: viewModel)
+                StepView(viewModel: viewModel) {
+                    if let onFlowFinished {
+                        onFlowFinished()
+                    } else {
+                        dismiss()
+                    }
+                }
             }
         }
     }
