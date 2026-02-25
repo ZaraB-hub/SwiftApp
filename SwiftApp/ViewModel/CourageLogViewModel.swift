@@ -19,3 +19,18 @@ final class CourageLogViewModel {
         load()
     }
 }
+
+extension CourageLogViewModel {
+
+    static var preview: CourageLogViewModel {
+
+        let repo = SwiftDataTaskRepository(inMemoryOnly: true)
+
+        let taskService = TaskServices(
+            repository: repo,
+            stepGenerator: StepGeneratorService()
+        )
+
+        return CourageLogViewModel(taskService: taskService)
+    }
+}

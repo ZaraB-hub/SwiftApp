@@ -98,3 +98,34 @@ public final class ActiveStepViewModel {
     var breathingAnimationDuration: TimeInterval = 4
     var breathingCycle: Int = 1
 }
+
+extension ActiveStepViewModel {
+
+    static var preview: ActiveStepViewModel {
+
+        let repo = SwiftDataTaskRepository(inMemoryOnly: true)
+
+        let stepService = StepService(repository: repo)
+
+        let taskService = TaskServices(
+            repository: repo,
+            stepGenerator: StepGeneratorService()
+        )
+
+        let sampleTask = Task(
+            title: "Send the difficult email",
+            steps: [
+                Step(title: "Open your inbox", isCompleted: true),
+                Step(title: "Write a short first draft"),
+                Step(title: "Press send")
+            ],
+            anxietyBefore: 7
+        )
+
+        return ActiveStepViewModel(
+            task: sampleTask,
+            stepService: stepService,
+            taskService: taskService
+        )
+    }
+}

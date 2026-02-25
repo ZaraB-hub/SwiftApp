@@ -31,3 +31,23 @@ public final class AddTaskViewModel {
         isLoading = false
     }
 }
+
+extension AddTaskViewModel {
+
+    static var preview: AddTaskViewModel {
+
+        let repo = SwiftDataTaskRepository(inMemoryOnly: true)
+
+        let stepService = StepService(repository: repo)
+
+        let taskService = TaskServices(
+            repository: repo,
+            stepGenerator: StepGeneratorService()
+        )
+
+        return AddTaskViewModel(
+            taskService: taskService,
+            stepService: stepService
+        )
+    }
+}
