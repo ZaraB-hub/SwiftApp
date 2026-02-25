@@ -4,14 +4,16 @@ import Foundation
 struct ActiveStepView: View {
 
     @State var viewModel: ActiveStepViewModel
-    @Environment(\.dismiss) private var dismiss
+    var onFlowFinished: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
             AppBackground()
 
             if viewModel.taskSaved {
-                SavedView(viewModel: viewModel, dismiss: dismiss)
+                SavedView(viewModel: viewModel) {
+                    onFlowFinished?()
+                }
             } else if viewModel.showReflection {
                 ReflectionView(viewModel: viewModel)
             } else if viewModel.isCompleted {

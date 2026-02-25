@@ -3,11 +3,11 @@ import SwiftUI
 struct SavedView: View {
 
 	var viewModel: ActiveStepViewModel
-	let dismiss: DismissAction
+	var onBackToHome: () -> Void
 
 	var body: some View {
 		ZStack {
-			//ConfettiView(isActive: true)
+			
 			
 			VStack(spacing: 24) {
 				Spacer()
@@ -28,9 +28,7 @@ struct SavedView: View {
 			Spacer()
 
 			Button {
-				dismiss()
-				dismiss()
-				dismiss()
+				onBackToHome()
 			} label: {
 				Text("Back to Home")
 					.fontWeight(.semibold)

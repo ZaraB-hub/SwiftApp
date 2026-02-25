@@ -4,6 +4,7 @@ import SwiftUI
 struct HomeView: View {
 
     @State var viewModel: HomeViewModel
+    @State private var showCreateTask = false
 
     var body: some View {
         ZStack {
@@ -34,12 +35,15 @@ struct HomeView: View {
                         .foregroundColor(.secondary)
                 }
 
-                NavigationLink {
+                NavigationLink(isActive: $showCreateTask) {
                     CreateTaskNameView(
                         viewModel: AddTaskViewModel(
                             taskService: viewModel.taskService,
                             stepService: viewModel.stepService
-                        )
+                        ),
+                        onFlowFinished: {
+                            showCreateTask = false
+                        }
                     )
                 } label: {
                     PrimaryActionButtonLabel(title: "Start something hard")

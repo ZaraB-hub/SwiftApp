@@ -12,7 +12,6 @@ struct StepView: View {
 
             VStack(spacing: 28) {
 
-                // Progress header
                 VStack(spacing: 8) {
 
                     let completed = viewModel.task.steps.filter { $0.isCompleted }.count
@@ -49,14 +48,14 @@ struct StepView: View {
 
                 VStack(spacing: 16) {
 
-                    // Done button
+                    
                     Button {
                         viewModel.completeCurrentStep()
                     } label: {
-                        PrimaryActionButtonLabel(title: "Done ✓")
+                        PrimaryActionButtonLabel(title: "Done")
                     }
 
-                    // Too hard
+                    
                     Button {
                         viewModel.tooHard()
                     } label: {

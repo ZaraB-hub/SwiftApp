@@ -4,6 +4,7 @@ import SwiftUI
 struct CreateTaskNameView: View {
 
     @State var viewModel: AddTaskViewModel
+    var onFlowFinished: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss //built in dismiss fj from swift and store it from swift
 
     var body: some View {
@@ -56,7 +57,7 @@ struct CreateTaskNameView: View {
 
                 
                 NavigationLink {
-                    AnxietyView(viewModel: viewModel)
+                    AnxietyView(viewModel: viewModel, onFlowFinished: onFlowFinished)
                 } label: {
                     if viewModel.title.isEmpty {
                         SecondaryActionButtonLabel(title: "Continue")

@@ -11,6 +11,7 @@ import SwiftUI
 struct AnxietyView: View {
 
     @State var viewModel: AddTaskViewModel
+    var onFlowFinished: (() -> Void)? = nil
     @State private var navigate = false
     @State private var isLoading = false
     @Environment(\.dismiss) private var dismiss
@@ -79,7 +80,8 @@ struct AnxietyView: View {
                                 task: task,
                                 stepService: viewModel.stepService,
                                 taskService: viewModel.taskService
-                            )
+                            ),
+                            onFlowFinished: onFlowFinished
                         )
                     }
                 } label: { EmptyView() }
