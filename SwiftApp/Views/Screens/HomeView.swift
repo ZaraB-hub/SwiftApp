@@ -15,7 +15,7 @@ struct HomeView: View {
 
                 VStack(spacing: 16) {
 
-                    // Icon container
+                
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.white.opacity(0.9))
@@ -34,7 +34,6 @@ struct HomeView: View {
                         .foregroundColor(.secondary)
                 }
 
-                // Primary button
                 NavigationLink {
                     CreateTaskNameView(
                         viewModel: AddTaskViewModel(
@@ -46,7 +45,6 @@ struct HomeView: View {
                     PrimaryActionButtonLabel(title: "Start something hard")
                 }
 
-                // Secondary button
                 NavigationLink {
                     CourageLogView(
                         viewModel: CourageLogViewModel(

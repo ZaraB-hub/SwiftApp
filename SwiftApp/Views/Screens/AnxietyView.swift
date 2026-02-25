@@ -22,15 +22,7 @@ struct AnxietyView: View {
 
             VStack(spacing: 28) {
 
-                // Back button
-                HStack {
-                    BackCircleButton {
-                        dismiss()
-                    }
-
-                    Spacer()
-                }
-
+            
                 Spacer()
 
                 VStack(spacing: 12) {
@@ -50,7 +42,7 @@ struct AnxietyView: View {
                         .frame(width: 120, height: 120)
                         .shadow(radius: 12)
 
-                    Text("\(Int(viewModel.anxiety))")
+                    Text("\(viewModel.anxiety)")
                         .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.purple)
                 }

@@ -19,17 +19,17 @@ struct SwiftAppApp: App {
     
     init(){
         do {
-            let container = try ModelContainer(for: Task.self)
+            let container = try ModelContainer(for: Task.self) // create db for my task model / Task.self - what do i want to store
             let repo = SwiftDataTaskRepository(modelContext: container.mainContext)
-            let stepGen = StepGeneratorService()
+            let stepGenerator = StepGeneratorService()
 
             self.sharedModelContainer = container
             self.repository = repo
-            self.stepGenerator = stepGen
-            self.taskService = TaskServices(repository: repo, stepGenerator: stepGen)
+            self.stepGenerator = stepGenerator
+            self.taskService = TaskServices(repository: repo, stepGenerator: stepGenerator)
             self.stepService = StepService(repository: repo)
         } catch {
-            fatalError("Could not initialize SwiftData container: \(error)")
+            fatalError("Could not initialize container: \(error)")
         }
     }
     

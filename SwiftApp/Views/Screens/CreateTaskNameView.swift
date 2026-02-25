@@ -4,7 +4,7 @@ import SwiftUI
 struct CreateTaskNameView: View {
 
     @State var viewModel: AddTaskViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) private var dismiss //built in dismiss fj from swift and store it from swift
 
     var body: some View {
         ZStack {
@@ -13,14 +13,13 @@ struct CreateTaskNameView: View {
 
             VStack(spacing: 28) {
 
-                // Back button
-                HStack {
-                    BackCircleButton {
-                        dismiss()
-                    }
+                // HStack {
+                //     BackCircleButton {
+                //         dismiss()
+                //     }
 
-                    Spacer()
-                }
+                //     Spacer()
+                // }
 
                 Spacer()
 
@@ -35,7 +34,7 @@ struct CreateTaskNameView: View {
                         .multilineTextAlignment(.center)
                 }
 
-                // Text card
+                
                 ZStack(alignment: .topLeading) {
 
                     RoundedRectangle(cornerRadius: 20)
@@ -55,7 +54,7 @@ struct CreateTaskNameView: View {
                     }
                 }
 
-                // Continue button
+                
                 NavigationLink {
                     AnxietyView(viewModel: viewModel)
                 } label: {

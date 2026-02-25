@@ -3,10 +3,19 @@ import SwiftUI
 struct BreathingView: View {
 
 	var viewModel: ActiveStepViewModel
+	@Environment(\.dismiss) private var dismiss
 
 	var body: some View {
 		VStack(spacing: 48) {
 			Spacer()
+
+			HStack{
+						Button {
+			viewModel.isBreathing = false
+		} label: {
+			Text("X")
+		}
+			}
 
 			Text(viewModel.breathingPhase)
 				.font(.system(size: 36, weight: .light))
