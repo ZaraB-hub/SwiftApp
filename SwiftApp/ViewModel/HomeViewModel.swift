@@ -33,3 +33,22 @@ public final class HomeViewModel {
         loadTasks()
     }
 }
+extension HomeViewModel {
+
+    static var preview: HomeViewModel {
+
+        let repo = SwiftDataTaskRepository(inMemoryOnly: true)
+
+        let stepService = StepService(repository: repo)
+
+        let taskService = TaskServices(
+            repository: repo,
+            stepGenerator: StepGeneratorService()
+        )
+
+        return HomeViewModel(
+            taskService: taskService,
+            stepService: stepService
+        )
+    }
+}

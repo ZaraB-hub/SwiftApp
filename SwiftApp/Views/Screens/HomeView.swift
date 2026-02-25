@@ -64,3 +64,7 @@ struct HomeView: View {
         .onAppear { viewModel.loadTasks() }
     }
 }
+
+#Preview {
+    HomeView(viewModel: .preview)
+}
