@@ -4,6 +4,8 @@ struct HomeView: View {
 
     @State var viewModel: HomeViewModel
     @State private var showCreateTask = false
+    @State private var selectedInProgressTask: Task? = nil
+    @State private var navigateToActiveTask = false
 
     var body: some View {
         let recentActiveTasks = Array(
@@ -98,6 +100,20 @@ struct HomeView: View {
                     SecondaryActionButtonLabel(title: "Courage Log")
                 }
 
+                NavigationLink(isActive: $navigateToActiveTask) {
+                    if let task = selectedInProgressTask {
+                        ActiveStepView(
+                            viewModel: ActiveStepViewModel(
+                                task: task,
+                                stepService: viewModel.stepService,
+                                taskService: viewModel.taskService
+                            )
+                        )
+                    }
+                } label: {
+                    EmptyView()
+                }
+
                 if !recentActiveTasks.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("In Progress")
@@ -122,14 +138,9 @@ struct HomeView: View {
                                         .foregroundColor(.secondary)
                                         .frame(maxWidth: .infinity)
 
-                                    NavigationLink {
-                                        ActiveStepView(
-                                            viewModel: ActiveStepViewModel(
-                                                task: task,
-                                                stepService: viewModel.stepService,
-                                                taskService: viewModel.taskService
-                                            )
-                                        )
+                                    Button {
+                                        selectedInProgressTask = task
+                                        navigateToActiveTask = true
                                     } label: {
                                         PrimaryActionButtonLabel(title: "Resume Task")
                                     }

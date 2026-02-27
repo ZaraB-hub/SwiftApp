@@ -109,6 +109,7 @@ struct CourageLogView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color.white.opacity(0.92))
                             .cornerRadius(18)
+                            .padding(.vertical, 6)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
