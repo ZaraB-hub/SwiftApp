@@ -89,22 +89,17 @@ struct CompletedView: View {
         animateCelebration = false
         revealText = false
 
-        _Concurrency.Task {
-            try? await _Concurrency.Task.sleep(nanoseconds: 160_000_000)
-            await MainActor.run {
-                animateCelebration = true
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
+            animateCelebration = true
+        }
 
-            try? await _Concurrency.Task.sleep(nanoseconds: 500_000_000)
-            await MainActor.run {
-                revealText = true
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.66) {
+            revealText = true
+        }
 
-            try? await _Concurrency.Task.sleep(nanoseconds: 1_450_000_000)
-            await MainActor.run {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
-                    viewModel.showReflection = true
-                }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.11) {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                viewModel.showReflection = true
             }
         }
     }
