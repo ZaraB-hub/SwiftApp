@@ -22,10 +22,15 @@ public final class StepGeneratorService {
         
         private func generateWithAI(for taskTitle: String) async -> [Step]? {
             do {
-                let session = LanguageModelSession()
+                let instructions = """
+                You are a psychologist helping your client finish a task.
+                Break tasks into 5-7 very small, concrete, anxiety-friendly steps.
+                """
+                let session = LanguageModelSession(instructions:instructions)
                 let prompt = """
                 Break this task into 5-7 very small, concrete steps for someone with anxiety or ADHD.
                 Each step should and be extremely specific and broken down in a way that help someone wiith anxiety face the thing they are afraid to do.
+                Prioritize the real intent from the task words.
                 Task: \(taskTitle)
                 
                 Return ONLY a numbered list like this:
@@ -61,16 +66,29 @@ public final class StepGeneratorService {
         }
 
     private func fallbackSteps(for title: String) -> [Step] {
-        let lower = title.lowercased()
+        let normalized = normalizedText(title)
+
+        if containsAny(normalized, ["write", "send", "draft"]) && containsAny(normalized, ["email", "e mail", "mail", "emali", "emial", "inbox", "compose"]) {
+            return emailSteps
+        }
+
+        if containsAny(normalized, ["email", "e mail", "mail", "emali", "emial", "inbox", "compose"]) {
+            return emailSteps
+        }
+
+        if containsAny(normalized, ["text", "message", "reply", "dm"]) {
+            return messageSteps
+        }
+
+        if containsAny(normalized, ["call", "phone", "dial"]) {
+            return phoneCallSteps
+        }
 
         let rules: [([String], [Step])] = [
-            (["email"], emailSteps),
-            (["text", "message"], messageSteps),
-            (["call", "phone"], phoneCallSteps),
             (["apologize", "sorry"], apologizeSteps),
             (["difficult conversation", "talk to"], difficultConversationSteps),
 
-            (["essay", "paper", "write"], essaySteps),
+            (["essay", "paper", "thesis", "article", "draft"], essaySteps),
             (["study", "studying"], studySteps),
             (["read", "reading"], readingSteps),
             (["notes", "note"], notesSteps),
@@ -91,26 +109,48 @@ public final class StepGeneratorService {
             (["cancel"], cancelSteps),
 
             (["clean", "tidy"], cleanSteps),
-            (["laundry", "clothes", "wash"], laundrySteps),
+            (["laundry", "clothes", "washing machine"], laundrySteps),
             (["dishes", "dishwasher"], dishesSteps),
             (["grocery", "groceries", "shopping"], grocerySteps),
             (["cook", "cooking", "dinner", "lunch", "breakfast"], cookSteps),
 
             (["meeting"], meetingSteps),
-            (["presentation", "present", "slides"], presentationSteps),
+            (["presentation", "slides", "pitch"], presentationSteps),
             (["report"], reportSteps),
             (["deadline"], deadlineSteps),
 
-            (["hang", "plans", "meet up"], socialSteps)
+            (["hang out", "plans with", "meet up"], socialSteps)
         ]
 
         if let matched = rules.first(where: { keywords, _ in
-            keywords.contains(where: { lower.contains($0) })
+            containsAny(normalized, keywords)
         }) {
             return matched.1
         }
 
         return genericSteps
+    }
+
+    private func containsAny(_ text: String, _ keywords: [String]) -> Bool {
+        keywords.contains(where: { containsWordOrPhrase(text, $0) })
+    }
+
+    private func containsWordOrPhrase(_ text: String, _ keyword: String) -> Bool {
+        let trimmed = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+
+        if trimmed.contains(" ") {
+            return text.contains(trimmed)
+        }
+
+        let pattern = #"\b"# + NSRegularExpression.escapedPattern(for: trimmed) + #"\b"#
+        return text.range(of: pattern, options: .regularExpression) != nil
+    }
+
+    private func normalizedText(_ text: String) -> String {
+        let lowered = text.lowercased()
+        let cleaned = lowered.replacingOccurrences(of: "[^a-z0-9\\s]", with: " ", options: .regularExpression)
+        return cleaned.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
     }
     
     // MARK: - Communication
