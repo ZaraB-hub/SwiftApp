@@ -24,11 +24,15 @@ struct CompletedView: View {
                 Spacer()
                 
                 Button {
-                    viewModel.showReflection = true
+                    AppHaptics.light()
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                        viewModel.showReflection = true
+                    }
                 } label: {
                     PrimaryActionButtonLabel(title: "How do you feel now?")
                         .padding(.horizontal,15)
                 }
+                .buttonStyle(PressableScaleButtonStyle())
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }

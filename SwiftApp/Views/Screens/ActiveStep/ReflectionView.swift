@@ -35,6 +35,7 @@ struct ReflectionView: View {
                     Text("\(Int(viewModel.anxietyAfter))")
                         .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.purple)
+                        .animation(.spring(response: 0.22, dampingFraction: 0.85), value: viewModel.anxietyAfter)
                 }
 
                 Text(anxietyLabel(for: Int(viewModel.anxietyAfter)))
@@ -91,10 +92,14 @@ struct ReflectionView: View {
                 Spacer()
 
                 Button {
-                    viewModel.saveAndFinish()
+                    AppHaptics.success()
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
+                        viewModel.saveAndFinish()
+                    }
                 } label: {
                     PrimaryActionButtonLabel(title: "Save & Finish")
                 }
+                .buttonStyle(PressableScaleButtonStyle())
                 .padding(.horizontal)
                 .padding(.bottom, 32)
             }

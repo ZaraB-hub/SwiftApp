@@ -53,22 +53,35 @@ struct StepView: View {
 
                     
                     Button {
-                        viewModel.completeCurrentStep()
+                        AppHaptics.medium()
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
+                            viewModel.completeCurrentStep()
+                        }
+
+                        if viewModel.isCompleted {
+                            AppHaptics.success()
+                        }
                     } label: {
                         PrimaryActionButtonLabel(title: "Done")
                     }
+                    .buttonStyle(PressableScaleButtonStyle())
 
                     
                     Button {
-                        viewModel.tooHard()
+                        AppHaptics.warning()
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.85)) {
+                            viewModel.tooHard()
+                        }
                     } label: {
                         SecondaryActionButtonLabel(title: "Too hard right now")
                     }
+                    .buttonStyle(PressableScaleButtonStyle())
                 }
                 .padding(.horizontal)
                 .padding(.bottom, 32)
 
                 Button {
+                    AppHaptics.warning()
                     onCancelToHome?()
                 } label: {
                     Text("×  Can't do this now")

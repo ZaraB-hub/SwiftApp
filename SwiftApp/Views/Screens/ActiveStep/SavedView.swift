@@ -29,11 +29,13 @@ struct SavedView: View {
             Spacer()
 
             Button {
+                AppHaptics.light()
                 onBackToHome()
             } label: {
                 PrimaryActionButtonLabel(title: "Back to Home")
 
             }
+            .buttonStyle(PressableScaleButtonStyle())
             .padding(.horizontal)
             .padding(.bottom, 32)
         }

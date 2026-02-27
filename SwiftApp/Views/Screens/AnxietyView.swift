@@ -45,6 +45,7 @@ struct AnxietyView: View {
                     Text("\(Int(viewModel.anxiety))")
                         .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.purple)
+                        .animation(.spring(response: 0.22, dampingFraction: 0.85), value: viewModel.anxiety)
                 }
 
                 Text(anxietyLabel(for: Int(viewModel.anxiety)))
@@ -85,15 +86,20 @@ struct AnxietyView: View {
                 } label: { EmptyView() }
 
                 Button {
+                    AppHaptics.light()
                     isLoading = true
                     _Concurrency.Task {
                         await viewModel.createTask()
+                        AppHaptics.success()
                         isLoading = false
-                        navigate = true
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+                            navigate = true
+                        }
                     }
                 } label: {
                     PrimaryActionButtonLabel(title: "Continue", isLoading: isLoading)
                 }
+                .buttonStyle(PressableScaleButtonStyle())
                 .padding(.horizontal)
                 .padding(.bottom, 32)
                 .disabled(isLoading)
