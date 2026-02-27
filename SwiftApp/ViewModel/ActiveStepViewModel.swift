@@ -56,9 +56,9 @@ public final class ActiveStepViewModel {
             let originalTitle = step.title
             let taskTitle = task.title
 
-            Task {
+            _Concurrency.Task {
                 let microStep = await taskService.generateMicroStep(from: originalTitle, taskTitle: taskTitle)
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.pendingMicroStep = (stepID: stepID, title: microStep)
                 }
             }
