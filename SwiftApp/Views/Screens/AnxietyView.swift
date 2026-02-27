@@ -42,7 +42,7 @@ struct AnxietyView: View {
                         .frame(width: 120, height: 120)
                         .shadow(radius: 12)
 
-                    Text("\(viewModel.anxiety)")
+                    Text("\(Int(viewModel.anxiety))")
                         .font(.system(size: 48, weight: .bold))
                         .foregroundColor(.purple)
                 }
