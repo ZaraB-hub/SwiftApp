@@ -26,6 +26,10 @@ public final class TaskServices {
         repository.save(task)
         print("task created")
     }
+
+    public func generateMicroStep(from stepTitle: String, taskTitle: String) async -> String {
+        await stepGenerator.generateMicroStep(from: stepTitle, taskTitle: taskTitle)
+    }
     
     public func completeTask(id: UUID, anxietyAfter: Int, reflection: String?) throws {
         guard var task = repository.fetch(id: id) else { return }
