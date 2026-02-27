@@ -15,7 +15,7 @@ public final class AddTaskViewModel {
     let stepService: StepService
     
     var title: String = ""
-    var anxiety: Int = 5
+    var anxiety: Double = 5
     var createdTask: Task? = nil
     var isLoading: Bool = false
     

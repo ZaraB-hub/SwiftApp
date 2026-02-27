@@ -32,8 +32,7 @@ struct AnxietyView: View {
                         .font(.system(size: 32, weight: .bold))
                         .multilineTextAlignment(.center)
 
-                    Text("Right now, about this task")
-                        .foregroundColor(.secondary)
+                    
                 }
 
                 // Anxiety bubble
@@ -54,9 +53,7 @@ struct AnxietyView: View {
                 // Slider card
                 VStack(spacing: 12) {
 
-                    Slider(value: $viewModel.anxiety, in: 1...10, step: 1)
-                        .tint(.purple)
-
+                    Slider(value:$viewModel.anxiety,in: 1...10, step: 1)
                     HStack {
                         Text("1")
                         Spacer()
@@ -124,3 +121,4 @@ struct AnxietyView: View {
         )
     }
 }
+

@@ -1,3 +1,4 @@
+
 import SwiftUI
 import Foundation
 
@@ -12,7 +13,7 @@ struct ActiveStepView: View {
             AppBackground()
 
             if viewModel.taskSaved {
-                SavedView(viewModel: viewModel) {
+                SavedView(viewModel: viewModel){
                     if let onFlowFinished {
                         onFlowFinished()
                     } else {

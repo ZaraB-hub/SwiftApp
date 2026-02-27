@@ -13,15 +13,6 @@ struct CreateTaskNameView: View {
             AppBackground()
 
             VStack(spacing: 28) {
-
-                // HStack {
-                //     BackCircleButton {
-                //         dismiss()
-                //     }
-
-                //     Spacer()
-                // }
-
                 Spacer()
 
                 VStack(spacing: 12) {
@@ -30,7 +21,7 @@ struct CreateTaskNameView: View {
                         .font(.system(size: 32, weight: .bold))
                         .multilineTextAlignment(.center)
 
-                    Text("It's okay. There's no judgment here.")
+                    Text("It's okay. We will do one step at a time.")
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -40,7 +31,8 @@ struct CreateTaskNameView: View {
 
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.white)
-                        .shadow(radius: 10)
+                        .shadow(radius: 2)
+                        .frame(height:120)
 
                     TextEditor(text: $viewModel.title)
                         .padding(12)
@@ -62,6 +54,7 @@ struct CreateTaskNameView: View {
                     if viewModel.title.isEmpty {
                         SecondaryActionButtonLabel(title: "Continue")
                             .foregroundColor(.gray)
+                            
                     } else {
                         PrimaryActionButtonLabel(title: "Continue")
                     }
@@ -74,4 +67,9 @@ struct CreateTaskNameView: View {
             .padding(.top)
         }
     }
+}
+
+
+#Preview {
+    CreateTaskNameView(viewModel: .preview)
 }

@@ -65,9 +65,7 @@ struct ReflectionView: View {
                 // Reflection card
                 VStack(alignment: .leading, spacing: 8) {
 
-                    Text("How did it feel? (optional)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+    
 
                     ZStack(alignment: .topLeading) {
 
@@ -82,7 +80,7 @@ struct ReflectionView: View {
                             .background(Color.clear)
 
                         if viewModel.reflection.isEmpty {
-                            Text("It wasn't as bad as I thought...")
+                            Text("How do you feel now? ")
                                 .foregroundColor(.gray)
                                 .padding(18)
                         }
@@ -106,4 +104,8 @@ struct ReflectionView: View {
     }
 
 
+}
+
+#Preview {
+    ReflectionView(viewModel: .preview)
 }

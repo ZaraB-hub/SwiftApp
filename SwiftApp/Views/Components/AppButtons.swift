@@ -38,8 +38,8 @@ struct PrimaryActionButtonLabel: View {
         .background(
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.9),
-                    Color.purple.opacity(0.7)
+                    Color.purple.opacity(0.8),
+                    Color.purple.opacity(0.6)
                 ],
                 startPoint: .leading,
                 endPoint: .trailing
@@ -60,6 +60,7 @@ struct SecondaryActionButtonLabel: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.white.opacity(0.9))
+            .foregroundStyle(Color.black)
             .cornerRadius(22)
     }
 }
