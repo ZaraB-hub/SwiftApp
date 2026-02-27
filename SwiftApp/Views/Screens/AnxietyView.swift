@@ -54,6 +54,7 @@ struct AnxietyView: View {
                 VStack(spacing: 12) {
 
                     Slider(value:$viewModel.anxiety,in: 1...10, step: 1)
+                        .tint(pastelAnxietyColor(for: viewModel.anxiety))
                     HStack {
                         Text("1")
                         Spacer()

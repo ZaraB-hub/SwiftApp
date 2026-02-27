@@ -31,13 +31,8 @@ struct SavedView: View {
             Button {
                 onBackToHome()
             } label: {
-                Text("Back to Home")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(16)
+                PrimaryActionButtonLabel(title: "Back to Home")
+
             }
             .padding(.horizontal)
             .padding(.bottom, 32)

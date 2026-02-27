@@ -46,7 +46,7 @@ struct ReflectionView: View {
                 VStack(spacing: 12) {
 
                     Slider(value: $viewModel.anxietyAfter, in: 1...10, step: 1)
-                        .tint(.purple)
+                        .tint(pastelAnxietyColor(for: viewModel.anxietyAfter))
 
                     HStack {
                         Text("1")

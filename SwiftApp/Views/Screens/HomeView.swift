@@ -74,47 +74,43 @@ struct HomeView: View {
                             let total = task.steps.count
                             let shownStep = min(completed + 1, max(total, 1))
 
-                            VStack(alignment: .leading, spacing: 12) {
+                            VStack(spacing: 12) {
                                 Text(task.title)
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.primary)
                                     .lineLimit(1)
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity)
 
                                 Text("Step \(shownStep) of \(total)")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity)
 
-                                HStack(spacing: 10) {
-                                    NavigationLink {
-                                        ActiveStepView(
-                                            viewModel: ActiveStepViewModel(
-                                                task: task,
-                                                stepService: viewModel.stepService,
-                                                taskService: viewModel.taskService
-                                            )
+                                NavigationLink {
+                                    ActiveStepView(
+                                        viewModel: ActiveStepViewModel(
+                                            task: task,
+                                            stepService: viewModel.stepService,
+                                            taskService: viewModel.taskService
                                         )
-                                    } label: {
-                                        PrimaryActionButtonLabel(title: "Resume Task")
-                                    }
-                                    .buttonStyle(.plain)
-
-                                    Button(role: .destructive) {
-                                        viewModel.deleteTask(id: task.id)
-                                    } label: {
-                                        Image(systemName: "trash")
-                                            .font(.subheadline.weight(.semibold))
-                                            .foregroundColor(.red)
-                                            .frame(width: 20, height: 20)
-                                            .padding(10)
-                                            .background(Color.white.opacity(0.95))
-                                            .cornerRadius(12)
-                                    }
+                                    )
+                                } label: {
+                                    PrimaryActionButtonLabel(title: "Resume Task")
                                 }
+                                .buttonStyle(.plain)
                             }
                             .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.white.opacity(0.92))
+                            .frame(maxWidth: .infinity)
+                            .background(Color.white.opacity(0.84))
                             .cornerRadius(16)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    viewModel.deleteTask(id: task.id)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
                     }
                 }
