@@ -61,23 +61,45 @@ struct CourageLogView: View {
 
                     ForEach(viewModel.tasks) { task in
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(task.title)
-                                .font(.headline)
+                            HStack(alignment: .top) {
+                                Text(task.title)
+                                    .font(.headline)
+
+                                Spacer()
+
+                                if let anxietyAfter = task.anxietyAfter {
+                                    anxietyTrendBadge(before: task.anxietyBefore, after: anxietyAfter)
+                                }
+                            }
 
                             Text((task.dateCompleted ?? task.dateCreated).formatted(date: .abbreviated, time: .omitted))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
 
                             HStack(spacing: 16) {
-                                Text("Before: \(task.anxietyBefore)")
-                                    .font(.subheadline)
+                                HStack(spacing: 4) {
+                                    Text("Before:")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Text("\(task.anxietyBefore)")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.purple)
+                                }
 
-                                Text("After: \(task.anxietyAfter.map(String.init) ?? "—")")
-                                    .font(.subheadline)
+                                HStack(spacing: 4) {
+                                    Text("After:")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Text(task.anxietyAfter.map(String.init) ?? "—")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.purple)
+                                }
                             }
 
                             if let reflection = task.reflection, !reflection.isEmpty {
-                                Text(reflection)
+                                Divider()
+
+                                Text("\"\(reflection)\"")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -97,5 +119,19 @@ struct CourageLogView: View {
         .onAppear {
             viewModel.load()
         }
+    }
+
+    @ViewBuilder
+    private func anxietyTrendBadge(before: Int, after: Int) -> some View {
+        let wentUp = after > before
+        let wentDown = after < before
+
+        Image(systemName: wentUp ? "chart.line.uptrend.xyaxis" : wentDown ? "chart.line.downtrend.xyaxis" : "minus")
+            .font(.caption.weight(.semibold))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background((wentUp ? Color.red : wentDown ? Color.green : Color.secondary).opacity(0.16))
+        .foregroundColor(wentUp ? .red : wentDown ? .green : .secondary)
+        .clipShape(Capsule())
     }
 }

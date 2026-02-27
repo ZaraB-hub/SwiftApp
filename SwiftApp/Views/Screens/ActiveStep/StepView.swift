@@ -5,6 +5,7 @@ struct StepView: View {
 
     var viewModel: ActiveStepViewModel
     var onCancelToHome: (() -> Void)? = nil
+    @State private var isCancelHovered = false
 
     var body: some View {
         ZStack {
@@ -71,11 +72,23 @@ struct StepView: View {
                 } label: {
                     Text("×  Can't do this now")
                         .font(.caption)
-                        .foregroundColor(.secondary)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(CancelActionButtonStyle(isHovered: isCancelHovered))
+                .onHover { isHovering in
+                    isCancelHovered = isHovering
+                }
                 .padding(.bottom)
             }
         }
+    }
+}
+
+private struct CancelActionButtonStyle: ButtonStyle {
+
+    let isHovered: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(configuration.isPressed || isHovered ? .red : .secondary)
     }
 }

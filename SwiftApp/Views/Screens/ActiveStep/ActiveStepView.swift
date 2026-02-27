@@ -10,7 +10,7 @@ struct ActiveStepView: View {
     @Environment(\.dismiss) private var dismiss
 
     private var shouldLockBackNavigation: Bool {
-        viewModel.isBreathing || viewModel.showReflection || viewModel.isCompleted
+        viewModel.isBreathing || viewModel.showReflection || viewModel.isCompleted || isShowingStepView
     }
 
     private var isShowingStepView: Bool {
