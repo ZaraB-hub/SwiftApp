@@ -110,21 +110,6 @@ struct HomeView: View {
                                 let shownStep = min(completed + 1, max(total, 1))
 
                                 VStack(spacing: 12) {
-                                    HStack {
-                                        Spacer()
-                                        Button(role: .destructive) {
-                                            viewModel.deleteTask(id: task.id)
-                                        } label: {
-                                            Image(systemName: "trash")
-                                                .font(.caption.weight(.semibold))
-                                                .foregroundColor(.secondary)
-                                                .padding(6)
-                                                .background(Color.white.opacity(0.9))
-                                                .cornerRadius(8)
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
-
                                     Text(task.title)
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundColor(.primary)
