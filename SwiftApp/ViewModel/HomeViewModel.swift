@@ -8,6 +8,18 @@
 
 import Foundation
 
+public struct ActiveTaskSnapshot: Identifiable {
+    public let id: UUID
+    public let title: String
+    public let completedSteps: Int
+    public let totalSteps: Int
+    public let dateCreated: Date
+
+    public var shownStep: Int {
+        min(completedSteps + 1, max(totalSteps, 1))
+    }
+}
+
 @Observable
 public final class HomeViewModel {
     
@@ -15,6 +27,7 @@ public final class HomeViewModel {
     let stepService: StepService
     
     var activeTasks: [Task] = []
+    var activeTaskSnapshots: [ActiveTaskSnapshot] = []
     var completedTasks: [Task] = []
 
     private let tasksPerGrowthStage = 3
@@ -68,11 +81,26 @@ public final class HomeViewModel {
         let all = taskService.getTasks()
         activeTasks = all.filter { $0.status == .inProgress }
         completedTasks = all.filter { $0.status == .completed }
+
+        activeTaskSnapshots = activeTasks.map { task in
+            ActiveTaskSnapshot(
+                id: task.id,
+                title: task.title,
+                completedSteps: task.steps.filter { $0.isCompleted }.count,
+                totalSteps: task.steps.count,
+                dateCreated: task.dateCreated
+            )
+        }
     }
     
     func deleteTask(id: UUID) {
         taskService.deleteTask(id: id)
         loadTasks()
+    }
+
+    func activeStepViewModel(for taskID: UUID) -> ActiveStepViewModel? {
+        guard let task = try? taskService.getTask(id: taskID) else { return nil }
+        return ActiveStepViewModel(task: task, stepService: stepService, taskService: taskService)
     }
 }
 extension HomeViewModel {

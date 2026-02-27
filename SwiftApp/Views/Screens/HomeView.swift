@@ -4,12 +4,12 @@ struct HomeView: View {
 
     @State var viewModel: HomeViewModel
     @State private var showCreateTask = false
-    @State private var selectedInProgressTask: Task? = nil
+    @State private var selectedInProgressTaskID: UUID? = nil
     @State private var navigateToActiveTask = false
 
     var body: some View {
         let recentActiveTasks = Array(
-            viewModel.activeTasks
+            viewModel.activeTaskSnapshots
                 .sorted { $0.dateCreated > $1.dateCreated }
                 .prefix(1)
         )
@@ -101,14 +101,9 @@ struct HomeView: View {
                 }
 
                 NavigationLink(isActive: $navigateToActiveTask) {
-                    if let task = selectedInProgressTask {
-                        ActiveStepView(
-                            viewModel: ActiveStepViewModel(
-                                task: task,
-                                stepService: viewModel.stepService,
-                                taskService: viewModel.taskService
-                            )
-                        )
+                    if let taskID = selectedInProgressTaskID,
+                       let activeVM = viewModel.activeStepViewModel(for: taskID) {
+                        ActiveStepView(viewModel: activeVM)
                     }
                 } label: {
                     EmptyView()
@@ -121,10 +116,6 @@ struct HomeView: View {
 
                         List {
                             ForEach(recentActiveTasks) { task in
-                                let completed = task.steps.filter { $0.isCompleted }.count
-                                let total = task.steps.count
-                                let shownStep = min(completed + 1, max(total, 1))
-
                                 VStack(spacing: 12) {
                                     Text(task.title)
                                         .font(.subheadline.weight(.semibold))
@@ -133,13 +124,13 @@ struct HomeView: View {
                                         .multilineTextAlignment(.center)
                                         .frame(maxWidth: .infinity)
 
-                                    Text("Step \(shownStep) of \(total)")
+                                    Text("Step \(task.shownStep) of \(task.totalSteps)")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                         .frame(maxWidth: .infinity)
 
                                     Button {
-                                        selectedInProgressTask = task
+                                        selectedInProgressTaskID = task.id
                                         navigateToActiveTask = true
                                     } label: {
                                         PrimaryActionButtonLabel(title: "Resume Task")
