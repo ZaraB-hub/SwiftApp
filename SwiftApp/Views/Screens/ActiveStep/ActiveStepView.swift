@@ -25,7 +25,7 @@ struct ActiveStepView: View {
     }
 
     private var shouldLockBackNavigation: Bool {
-        screenState != .saved
+        true
     }
 
     private func finishFlow() {
