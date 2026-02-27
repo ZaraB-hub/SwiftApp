@@ -21,11 +21,12 @@ struct CourageLogView: View {
                     VStack(spacing: 12) {
                         HStack(spacing: 12) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Avg point reduction")
+                                Text("Avg reduction")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 Text(String(format: "%.1f", viewModel.averageReduction))
                                     .font(.title2.weight(.bold))
+                                    .foregroundColor(.purple)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
@@ -108,6 +109,13 @@ struct CourageLogView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color.white.opacity(0.92))
                         .cornerRadius(18)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                viewModel.delete(id: task.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, 24)

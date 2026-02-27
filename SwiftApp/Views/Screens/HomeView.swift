@@ -70,55 +70,51 @@ struct HomeView: View {
                             .font(.headline)
 
                         ForEach(recentActiveTasks) { task in
-                            HStack(spacing: 10) {
-                                NavigationLink {
-                                    ActiveStepView(
-                                        viewModel: ActiveStepViewModel(
-                                            task: task,
-                                            stepService: viewModel.stepService,
-                                            taskService: viewModel.taskService
+                            let completed = task.steps.filter { $0.isCompleted }.count
+                            let total = task.steps.count
+                            let shownStep = min(completed + 1, max(total, 1))
+
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(task.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .lineLimit(1)
+
+                                Text("Step \(shownStep) of \(total)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+
+                                HStack(spacing: 10) {
+                                    NavigationLink {
+                                        ActiveStepView(
+                                            viewModel: ActiveStepViewModel(
+                                                task: task,
+                                                stepService: viewModel.stepService,
+                                                taskService: viewModel.taskService
+                                            )
                                         )
-                                    )
-                                } label: {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(task.title)
-                                                .font(.subheadline.weight(.semibold))
-                                                .foregroundColor(.primary)
-                                                .lineLimit(1)
-
-                                            let completed = task.steps.filter { $0.isCompleted }.count
-                                            let total = task.steps.count
-
-                                            Text("\(completed)/\(total) steps")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                        }
-
-                                        Spacer()
-
-                                        Image(systemName: "chevron.right")
-                                            .font(.caption.weight(.bold))
-                                            .foregroundColor(.secondary)
+                                    } label: {
+                                        PrimaryActionButtonLabel(title: "Resume Task")
                                     }
-                                    .padding()
-                                    .background(Color.white.opacity(0.92))
-                                    .cornerRadius(14)
-                                }
-                                .buttonStyle(.plain)
+                                    .buttonStyle(.plain)
 
-                                Button(role: .destructive) {
-                                    viewModel.deleteTask(id: task.id)
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundColor(.red)
-                                        .frame(width: 20, height: 20)
-                                        .padding(10)
-                                        .background(Color.white.opacity(0.92))
-                                        .cornerRadius(12)
+                                    Button(role: .destructive) {
+                                        viewModel.deleteTask(id: task.id)
+                                    } label: {
+                                        Image(systemName: "trash")
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundColor(.red)
+                                            .frame(width: 20, height: 20)
+                                            .padding(10)
+                                            .background(Color.white.opacity(0.95))
+                                            .cornerRadius(12)
+                                    }
                                 }
                             }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.white.opacity(0.92))
+                            .cornerRadius(16)
                         }
                     }
                 }

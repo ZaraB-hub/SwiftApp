@@ -18,14 +18,15 @@ struct StepView: View {
 
                     let completed = viewModel.task.steps.filter { $0.isCompleted }.count
                     let total = viewModel.task.steps.count
+                    let shownStep = min(completed + 1, total)
 
-                    Text("Step \(completed + 1) of \(total)")
+                    Text("Step \(shownStep) of \(total)")
                         .font(.caption)
                         .foregroundColor(.secondary)
 
-                    ProgressView(value: Double(completed), total: Double(total))
+                    ProgressView(value: Double(shownStep), total: Double(total))
                         .tint(.purple)
-                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity)
                 }
 
                 Spacer()
