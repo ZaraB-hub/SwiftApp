@@ -4,7 +4,6 @@ import SwiftUI
 struct BreathingView: View {
     
     var viewModel: ActiveStepViewModel
-    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(spacing: 48) {

@@ -24,7 +24,6 @@ public final class TaskServices {
         let steps = await stepGenerator.generateSteps(for: title)
         let task = Task(title: title, steps: steps, anxietyBefore: anxietyBefore)
         repository.save(task)
-        print("task created")
     }
     
     public func completeTask(id: UUID, anxietyAfter: Int, reflection: String?) throws {

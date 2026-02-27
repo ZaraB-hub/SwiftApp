@@ -1,6 +1,5 @@
 
 import SwiftUI
-import Foundation
 import UIKit
 
 struct ActiveStepView: View {
@@ -9,39 +8,52 @@ struct ActiveStepView: View {
     var onFlowFinished: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
 
-    private var shouldLockBackNavigation: Bool {
-        viewModel.isBreathing || viewModel.showReflection || viewModel.isCompleted || isShowingStepView
+    private enum ScreenState {
+        case saved
+        case reflection
+        case completed
+        case breathing
+        case step
     }
 
-    private var isShowingStepView: Bool {
-        !viewModel.taskSaved && !viewModel.showReflection && !viewModel.isCompleted && !viewModel.isBreathing
+    private var screenState: ScreenState {
+        if viewModel.taskSaved { return .saved }
+        if viewModel.showReflection { return .reflection }
+        if viewModel.isCompleted { return .completed }
+        if viewModel.isBreathing { return .breathing }
+        return .step
+    }
+
+    private var shouldLockBackNavigation: Bool {
+        screenState != .saved
+    }
+
+    private func finishFlow() {
+        if let onFlowFinished {
+            onFlowFinished()
+        } else {
+            dismiss()
+        }
     }
 
     var body: some View {
         ZStack {
             AppBackground()
 
-            if viewModel.taskSaved {
-                SavedView(viewModel: viewModel){
-                    if let onFlowFinished {
-                        onFlowFinished()
-                    } else {
-                        dismiss()
-                    }
+            switch screenState {
+            case .saved:
+                SavedView(viewModel: viewModel) {
+                    finishFlow()
                 }
-            } else if viewModel.showReflection {
+            case .reflection:
                 ReflectionView(viewModel: viewModel)
-            } else if viewModel.isCompleted {
+            case .completed:
                 CompletedView(viewModel: viewModel)
-            } else if viewModel.isBreathing {
+            case .breathing:
                 BreathingView(viewModel: viewModel)
-            } else {
+            case .step:
                 StepView(viewModel: viewModel) {
-                    if let onFlowFinished {
-                        onFlowFinished()
-                    } else {
-                        dismiss()
-                    }
+                    finishFlow()
                 }
             }
         }
@@ -50,7 +62,7 @@ struct ActiveStepView: View {
             BackNavigationControllerLock(isLocked: shouldLockBackNavigation)
         )
         .onDisappear {
-            guard isShowingStepView else { return }
+            guard screenState == .step else { return }
             onFlowFinished?()
         }
     }

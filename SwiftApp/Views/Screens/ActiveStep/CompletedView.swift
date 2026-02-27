@@ -1,4 +1,4 @@
-whatimport SwiftUI
+import SwiftUI
 
 struct CompletedView: View {
 

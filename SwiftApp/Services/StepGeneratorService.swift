@@ -22,9 +22,6 @@ public final class StepGeneratorService {
         
         private func generateWithAI(for taskTitle: String) async -> [Step]? {
             do {
-                let instructions = """
-                You are a psychologist that is helping her client accomplish a task
-                """
                 let session = LanguageModelSession()
                 let prompt = """
                 Break this task into 5-7 very small, concrete steps for someone with anxiety or ADHD.
@@ -65,88 +62,55 @@ public final class StepGeneratorService {
 
     private func fallbackSteps(for title: String) -> [Step] {
         let lower = title.lowercased()
-        
-        // Communication
-        if lower.contains("email") {
-            return emailSteps
-        } else if lower.contains("text") || lower.contains("message") || lower.contains("reply") {
-            return messageSteps
-        } else if lower.contains("call") || lower.contains("phone") {
-            return phoneCallSteps
-        } else if lower.contains("apologize") || lower.contains("sorry") {
-            return apologizeSteps
-        } else if lower.contains("difficult conversation") || lower.contains("talk to") {
-            return difficultConversationSteps
-            
-        // Academic
-        } else if lower.contains("essay") || lower.contains("paper") || lower.contains("write") {
-            return essaySteps
-        } else if lower.contains("study") || lower.contains("studying") {
-            return studySteps
-        } else if lower.contains("read") || lower.contains("reading") {
-            return readingSteps
-        } else if lower.contains("notes") || lower.contains("note") {
-            return notesSteps
-        } else if lower.contains("assignment") || lower.contains("homework") {
-            return assignmentSteps
-            
-        // Health
-        } else if lower.contains("gym") || lower.contains("workout") || lower.contains("exercise") {
-            return gymSteps
-        } else if lower.contains("run") || lower.contains("jog") {
-            return runSteps
-        } else if lower.contains("shower") || lower.contains("hygiene") || lower.contains("brush") {
-            return showerSteps
-        } else if lower.contains("sleep") || lower.contains("rest") {
-            return sleepSteps
-        } else if lower.contains("eat") || lower.contains("meal") || lower.contains("food") {
-            return mealSteps
-        } else if lower.contains("doctor") || lower.contains("appointment") || lower.contains("dentist") {
-            return appointmentSteps
-            
-        // Admin
-        } else if lower.contains("bill") || lower.contains("pay") || lower.contains("payment") {
-            return billSteps
-        } else if lower.contains("form") || lower.contains("fill") {
-            return formSteps
-        } else if lower.contains("apply") || lower.contains("application") {
-            return applySteps
-        } else if lower.contains("tax") || lower.contains("taxes") {
-            return taxSteps
-        } else if lower.contains("schedule") || lower.contains("book") || lower.contains("reserve") {
-            return scheduleSteps
-        } else if lower.contains("cancel") {
-            return cancelSteps
-            
-        // Home
-        } else if lower.contains("clean") || lower.contains("tidy") {
-            return cleanSteps
-        } else if lower.contains("laundry") || lower.contains("clothes") || lower.contains("wash") {
-            return laundrySteps
-        } else if lower.contains("dishes") || lower.contains("dishwasher") {
-            return dishesSteps
-        } else if lower.contains("grocery") || lower.contains("groceries") || lower.contains("shopping") {
-            return grocerySteps
-        } else if lower.contains("cook") || lower.contains("cooking") || lower.contains("dinner") || lower.contains("lunch") || lower.contains("breakfast") {
-            return cookSteps
-            
-        // Work
-        } else if lower.contains("meeting") {
-            return meetingSteps
-        } else if lower.contains("presentation") || lower.contains("present") || lower.contains("slides") {
-            return presentationSteps
-        } else if lower.contains("report") {
-            return reportSteps
-        } else if lower.contains("deadline") {
-            return deadlineSteps
-            
-        // Social
-        } else if lower.contains("hang") || lower.contains("plans") || lower.contains("meet up") {
-            return socialSteps
-            
-        } else {
-            return genericSteps
+
+        let rules: [([String], [Step])] = [
+            (["email"], emailSteps),
+            (["text", "message"], messageSteps),
+            (["call", "phone"], phoneCallSteps),
+            (["apologize", "sorry"], apologizeSteps),
+            (["difficult conversation", "talk to"], difficultConversationSteps),
+
+            (["essay", "paper", "write"], essaySteps),
+            (["study", "studying"], studySteps),
+            (["read", "reading"], readingSteps),
+            (["notes", "note"], notesSteps),
+            (["assignment", "homework"], assignmentSteps),
+
+            (["gym", "workout", "exercise"], gymSteps),
+            (["run", "jog"], runSteps),
+            (["shower", "hygiene", "brush"], showerSteps),
+            (["sleep", "rest"], sleepSteps),
+            (["eat", "meal", "food"], mealSteps),
+            (["doctor", "appointment", "dentist"], appointmentSteps),
+
+            (["bill", "pay", "payment"], billSteps),
+            (["form", "fill"], formSteps),
+            (["apply", "application"], applySteps),
+            (["tax", "taxes"], taxSteps),
+            (["schedule", "book", "reserve"], scheduleSteps),
+            (["cancel"], cancelSteps),
+
+            (["clean", "tidy"], cleanSteps),
+            (["laundry", "clothes", "wash"], laundrySteps),
+            (["dishes", "dishwasher"], dishesSteps),
+            (["grocery", "groceries", "shopping"], grocerySteps),
+            (["cook", "cooking", "dinner", "lunch", "breakfast"], cookSteps),
+
+            (["meeting"], meetingSteps),
+            (["presentation", "present", "slides"], presentationSteps),
+            (["report"], reportSteps),
+            (["deadline"], deadlineSteps),
+
+            (["hang", "plans", "meet up"], socialSteps)
+        ]
+
+        if let matched = rules.first(where: { keywords, _ in
+            keywords.contains(where: { lower.contains($0) })
+        }) {
+            return matched.1
         }
+
+        return genericSteps
     }
     
     // MARK: - Communication

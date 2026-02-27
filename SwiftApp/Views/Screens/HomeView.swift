@@ -9,7 +9,7 @@ struct HomeView: View {
         let recentActiveTasks = Array(
             viewModel.activeTasks
                 .sorted { $0.dateCreated > $1.dateCreated }
-                .prefix(3)
+                .prefix(1)
         )
 
         ZStack {
@@ -103,49 +103,59 @@ struct HomeView: View {
                         Text("In Progress")
                             .font(.headline)
 
-                        ForEach(recentActiveTasks) { task in
-                            let completed = task.steps.filter { $0.isCompleted }.count
-                            let total = task.steps.count
-                            let shownStep = min(completed + 1, max(total, 1))
+                        List {
+                            ForEach(recentActiveTasks) { task in
+                                let completed = task.steps.filter { $0.isCompleted }.count
+                                let total = task.steps.count
+                                let shownStep = min(completed + 1, max(total, 1))
 
-                            VStack(spacing: 12) {
-                                Text(task.title)
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity)
+                                VStack(spacing: 12) {
+                                    Text(task.title)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                        .lineLimit(1)
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
 
-                                Text("Step \(shownStep) of \(total)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity)
+                                    Text("Step \(shownStep) of \(total)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .frame(maxWidth: .infinity)
 
-                                NavigationLink {
-                                    ActiveStepView(
-                                        viewModel: ActiveStepViewModel(
-                                            task: task,
-                                            stepService: viewModel.stepService,
-                                            taskService: viewModel.taskService
+                                    NavigationLink {
+                                        ActiveStepView(
+                                            viewModel: ActiveStepViewModel(
+                                                task: task,
+                                                stepService: viewModel.stepService,
+                                                taskService: viewModel.taskService
+                                            )
                                         )
-                                    )
-                                } label: {
-                                    PrimaryActionButtonLabel(title: "Resume Task")
+                                    } label: {
+                                        PrimaryActionButtonLabel(title: "Resume Task")
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.white.opacity(0.84))
-                            .cornerRadius(16)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    viewModel.deleteTask(id: task.id)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.white.opacity(0.84))
+                                .cornerRadius(16)
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        viewModel.deleteTask(id: task.id)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
+                        .frame(height: 180)
+                        .listStyle(.plain)
+                        .scrollDisabled(true)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
                     }
                 }
 
