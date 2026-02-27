@@ -80,8 +80,8 @@ public final class ActiveStepViewModel {
     private func runBreathing() {
         let singleCycle: [(String, Double, TimeInterval)] = [
             ("Inhale", 1.0, 4),
-            ("Hold", 1.0, 7),
-            ("Exhale", 0.0, 8)
+            ("Hold", 1.0, 4),
+            ("Exhale", 0.0, 4)
         ]
 
         var delay: TimeInterval = 0
