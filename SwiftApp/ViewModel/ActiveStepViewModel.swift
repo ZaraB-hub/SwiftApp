@@ -23,7 +23,6 @@ public final class ActiveStepViewModel {
     var reflection: String = ""
     var taskSaved: Bool = false
     let totalBreathingCycles: Int = 3
-    private var pendingMicroStep: (stepID: UUID, title: String)? = nil
     
     init(task: Task, stepService: StepService, taskService: TaskServices) {
         self.task = task
@@ -51,19 +50,6 @@ public final class ActiveStepViewModel {
     }
     
     func tooHard() {
-        if let step = currentStep {
-            let stepID = step.id
-            let originalTitle = step.title
-            let taskTitle = task.title
-
-            _Concurrency.Task {
-                let microStep = await taskService.generateMicroStep(from: originalTitle, taskTitle: taskTitle)
-                await MainActor.run {
-                    self.pendingMicroStep = (stepID: stepID, title: microStep)
-                }
-            }
-        }
-
         isBreathing = true
         runBreathing()
     }
@@ -100,24 +86,6 @@ public final class ActiveStepViewModel {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.isBreathing = false
-
-            if let pending = self.pendingMicroStep,
-               let current = self.currentStep,
-               current.id == pending.stepID {
-                var updatedStep = current
-                updatedStep.title = pending.title
-                self.currentStep = updatedStep
-
-                self.task.steps = self.task.steps.map { step in
-                    var updated = step
-                    if step.id == pending.stepID {
-                        updated.title = pending.title
-                    }
-                    return updated
-                }
-            }
-
-            self.pendingMicroStep = nil
             self.breathingPhase = "Inhale"
             self.breathingProgress = 0.0
             self.breathingAnimationDuration = 4

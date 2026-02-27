@@ -19,14 +19,6 @@ public final class StepGeneratorService {
             }
             return fallbackSteps(for: taskTitle)
         }
-
-    public func generateMicroStep(from stepTitle: String, taskTitle: String? = nil) async -> String {
-        if let aiMicroStep = await generateMicroStepWithAI(from: stepTitle, taskTitle: taskTitle) {
-            return aiMicroStep
-        }
-
-        return microStepFallback(from: stepTitle)
-    }
         
         private func generateWithAI(for taskTitle: String) async -> [Step]? {
             do {
@@ -70,64 +62,6 @@ public final class StepGeneratorService {
                     return Step(title: withoutNumber)
                 }
         }
-
-    private func generateMicroStepWithAI(from stepTitle: String, taskTitle: String?) async -> String? {
-        do {
-            let session = LanguageModelSession()
-            let taskContext = taskTitle.map { "Task context: \($0)" } ?? ""
-
-            let prompt = """
-            Rewrite this step into one tiny starter action for someone feeling overwhelmed.
-            Keep it concrete, kind, and doable in under 2 minutes.
-            Return ONLY one sentence (no numbering, no explanation).
-
-            Original step: \(stepTitle)
-            \(taskContext)
-            """
-
-            let response = try await session.respond(to: prompt)
-
-            if let first = parseSteps(from: response.content).first?.title,
-               !first.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                return first
-            }
-
-            let fallbackLine = response.content
-                .components(separatedBy: .newlines)
-                .first?
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-
-            if let fallbackLine, !fallbackLine.isEmpty {
-                return fallbackLine
-            }
-
-            return nil
-        } catch {
-            return nil
-        }
-    }
-
-    private func microStepFallback(from stepTitle: String) -> String {
-        let lower = stepTitle.lowercased()
-
-        if lower.contains("email") || lower.contains("mail") {
-            return "Open your email app and write one sentence."
-        }
-
-        if lower.contains("call") || lower.contains("phone") {
-            return "Open your phone and find the contact."
-        }
-
-        if lower.contains("study") || lower.contains("read") || lower.contains("essay") || lower.contains("write") {
-            return "Open the file and write one short bullet point."
-        }
-
-        if lower.contains("clean") || lower.contains("laundry") || lower.contains("dishes") {
-            return "Do just one tiny part for 2 minutes."
-        }
-
-        return "Start with the smallest possible first move now."
-    }
 
     private func fallbackSteps(for title: String) -> [Step] {
         let lower = title.lowercased()
