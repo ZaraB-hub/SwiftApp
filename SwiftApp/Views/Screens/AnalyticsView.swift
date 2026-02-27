@@ -208,7 +208,7 @@ struct AnalyticsView: View {
             }
 
             LazyVGrid(columns: calendarColumns, spacing: 6) {
-                ForEach(calendar.veryShortWeekdaySymbols, id: \.self) { symbol in
+                ForEach(Array(calendar.veryShortWeekdaySymbols.enumerated()), id: \.offset) { _, symbol in
                     Text(symbol)
                         .font(.caption2)
                         .foregroundColor(.secondary)
