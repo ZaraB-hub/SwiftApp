@@ -5,6 +5,10 @@ struct CompletedView: View {
     var viewModel: ActiveStepViewModel
     @State private var animateCelebration = false
     @State private var revealText = false
+    @State private var hasScheduledSequence = false
+    @State private var animateWorkItem: DispatchWorkItem?
+    @State private var revealWorkItem: DispatchWorkItem?
+    @State private var advanceWorkItem: DispatchWorkItem?
     private let confettiCount = 18
 
     var body: some View {
@@ -53,6 +57,9 @@ struct CompletedView: View {
         .onAppear {
             playCelebrationAndAdvance()
         }
+        .onDisappear {
+            cancelPendingSequence()
+        }
     }
 
     private func confettiX(_ index: Int) -> CGFloat {
@@ -85,23 +92,43 @@ struct CompletedView: View {
     }
 
     private func playCelebrationAndAdvance() {
+        guard !hasScheduledSequence else { return }
+        hasScheduledSequence = true
+
         AppHaptics.success()
         animateCelebration = false
         revealText = false
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
+        let animateItem = DispatchWorkItem {
             animateCelebration = true
         }
+        animateWorkItem = animateItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.16, execute: animateItem)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.66) {
+        let revealItem = DispatchWorkItem {
             revealText = true
         }
+        revealWorkItem = revealItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.66, execute: revealItem)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.11) {
+        let advanceItem = DispatchWorkItem {
+            guard !viewModel.showReflection else { return }
             withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
                 viewModel.showReflection = true
             }
         }
+        advanceWorkItem = advanceItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.11, execute: advanceItem)
+    }
+
+    private func cancelPendingSequence() {
+        animateWorkItem?.cancel()
+        revealWorkItem?.cancel()
+        advanceWorkItem?.cancel()
+        animateWorkItem = nil
+        revealWorkItem = nil
+        advanceWorkItem = nil
+        hasScheduledSequence = false
     }
 }
 
