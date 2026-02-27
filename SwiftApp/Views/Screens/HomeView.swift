@@ -40,6 +40,40 @@ struct HomeView: View {
                         .foregroundColor(.secondary)
                 }
 
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .center) {
+                        Text(viewModel.plantEmoji)
+                            .font(.system(size: 34))
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Your Courage Plant · \(viewModel.plantStageTitle)")
+                                .font(.subheadline.weight(.semibold))
+                            Text("\(viewModel.completedCount) completed tasks")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Spacer()
+                    }
+
+                    ProgressView(value: viewModel.progressToNextPlantStage)
+                        .tint(.purple)
+
+                    if viewModel.tasksToNextPlantStage > 0 {
+                        Text("\(viewModel.tasksToNextPlantStage) more to grow to the next stage")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Your plant is fully grown 🌸")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.white.opacity(0.84))
+                .cornerRadius(16)
+
                 NavigationLink(isActive: $showCreateTask) {
                     CreateTaskNameView(
                         viewModel: AddTaskViewModel(

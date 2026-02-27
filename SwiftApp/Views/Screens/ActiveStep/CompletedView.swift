@@ -1,4 +1,4 @@
-import SwiftUI
+whatimport SwiftUI
 
 struct CompletedView: View {
 
@@ -25,7 +25,7 @@ struct CompletedView: View {
                             )
                             .opacity(animateCelebration ? 1 : 0)
                             .rotationEffect(.degrees(animateCelebration ? confettiRotation(index) : 0))
-                            .animation(.easeOut(duration: 0.72).delay(Double(index) * 0.02), value: animateCelebration)
+                            .animation(.easeOut(duration: 0.82).delay(Double(index) * 0.02), value: animateCelebration)
                     }
 
                     Text("🎉")
@@ -45,7 +45,7 @@ struct CompletedView: View {
                 }
                 .opacity(revealText ? 1 : 0)
                 .offset(y: revealText ? 0 : 10)
-                .animation(.easeOut(duration: 0.55), value: revealText)
+                .animation(.easeOut(duration: 0.68), value: revealText)
 
                 Spacer()
             }
@@ -90,17 +90,17 @@ struct CompletedView: View {
         revealText = false
 
         _Concurrency.Task {
-            try? await _Concurrency.Task.sleep(nanoseconds: 120_000_000)
+            try? await _Concurrency.Task.sleep(nanoseconds: 160_000_000)
             await MainActor.run {
                 animateCelebration = true
             }
 
-            try? await _Concurrency.Task.sleep(nanoseconds: 380_000_000)
+            try? await _Concurrency.Task.sleep(nanoseconds: 500_000_000)
             await MainActor.run {
                 revealText = true
             }
 
-            try? await _Concurrency.Task.sleep(nanoseconds: 1_250_000_000)
+            try? await _Concurrency.Task.sleep(nanoseconds: 1_450_000_000)
             await MainActor.run {
                 withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) {
                     viewModel.showReflection = true

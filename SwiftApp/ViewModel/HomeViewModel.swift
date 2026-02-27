@@ -16,6 +16,48 @@ public final class HomeViewModel {
     
     var activeTasks: [Task] = []
     var completedTasks: [Task] = []
+
+    private let tasksPerGrowthStage = 3
+
+    var completedCount: Int {
+        completedTasks.count
+    }
+
+    var plantStageIndex: Int {
+        min(completedCount / tasksPerGrowthStage, 4)
+    }
+
+    var plantEmoji: String {
+        switch plantStageIndex {
+        case 0: return "🌱"
+        case 1: return "🌿"
+        case 2: return "🪴"
+        case 3: return "🌳"
+        default: return "🌸"
+        }
+    }
+
+    var plantStageTitle: String {
+        switch plantStageIndex {
+        case 0: return "Seedling"
+        case 1: return "Sprout"
+        case 2: return "Growing"
+        case 3: return "Thriving"
+        default: return "Blooming"
+        }
+    }
+
+    var progressToNextPlantStage: Double {
+        if plantStageIndex >= 4 { return 1 }
+        let remainder = completedCount % tasksPerGrowthStage
+        return Double(remainder) / Double(tasksPerGrowthStage)
+    }
+
+    var tasksToNextPlantStage: Int {
+        if plantStageIndex >= 4 { return 0 }
+        let remainder = completedCount % tasksPerGrowthStage
+        return tasksPerGrowthStage - remainder
+    }
     
     public init(taskService: TaskServices, stepService:StepService) {
         self.taskService = taskService
